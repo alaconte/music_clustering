@@ -1,5 +1,6 @@
 import psycopg2
 import json
+import os
 
 class Database:
     def __init__(self):
@@ -25,13 +26,29 @@ class Database:
         records = cur.fetchall()
         if len(records) == 0:
             cur.execute(f"INSERT INTO artists (name, src_url) VALUES ('{info['artist']}', '{info['src_url']}')")
-        cur.execute(f"INSERT INTO all_songs (main_genre, artist, orig_file, proc_file_0) VALUES ('{info['main_genre']}', '{info['artist']}', '{info['orig_file']}', '{info['proc_file_0']}')")
+        cur.execute(f"INSERT INTO all_songs (main_genre, artist, orig_file, proc_file_0, song_name) VALUES ('{info['main_genre']}', '{info['artist']}', '{info['orig_file']}', '{info['proc_file_0']}', '{info['song_name']}')")
         self.dbh.commit()
         cur.close()
 
+    def check_song(self, songname):
+        cur = self.dbh.cursor()
+
+        cur.execute(f"SELECT * from all_songs WHERE song_name='{songname}'")
+        records = cur.fetchall()
+        cur.close()
+        return len(records) > 0
+
     def remove_song(self, songname):
         cur = self.dbh.cursor()
-        cur.execute(f"DELETE FROM all_songs WHERE orig_file='{songname}'")
+        cur.execute(f"SELECT * from all_songs WHERE song_name='{songname}'")
+        records = cur.fetchall()
+        for record in records:
+            try:
+                os.remove(record[3])
+                os.remove(record[4]+".npy")
+            except FileNotFoundError:
+                print("File not found")
+        cur.execute(f"DELETE FROM all_songs WHERE song_name='{songname}'")
         self.dbh.commit()
         cur.close()
 
@@ -44,5 +61,4 @@ class Database:
 if __name__ == "__main__":
     db = Database()
     # db.add_song({"main_genre": "hip-hop", "artist": "Kendrick Lamar", "orig_file": "test", "proc_file_0": "test", "src_url": "test"})
-    db.remove_song("test")
-    db.remove_artist("Kendrick Lamar")
+    db.remove_song("5752")

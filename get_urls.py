@@ -28,4 +28,8 @@ def get_song_list(artist):
     artist_page = results[0].find("a")["href"]
     print(artist_page)
 
+    # go to artist page
+    driver.get(search_base_url+artist_page)
+    page = driver.page_source
+
 print(get_song_list("Kendrick Lamar"))

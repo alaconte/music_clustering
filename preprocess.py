@@ -3,8 +3,8 @@ from scipy.fftpack import rfft, rfftfreq
 import numpy as np
 import matplotlib.pyplot as plt
 
-def preprocess(filepath):
-    song = AudioSegment.from_mp3(filepath)
+def preprocess(filepath, filename):
+    song = AudioSegment.from_mp3(filepath + filename)
 
     # find loudest 20 sec of song
     # use a search window 0.5 sec wide
@@ -37,8 +37,12 @@ def preprocess(filepath):
             bins.append(np.mean(np.abs(yf[(xf >= freq_bins[i][0]) & (xf < freq_bins[i][1])])))
         bins = np.array(bins)
         all_bins.append(bins)
-    print(f"Finished preprocessing for song: {filepath}")
-    return np.array(all_bins)
+    print(f"Finished preprocessing for song: {filename}")
+
+    # save the numpy array
+    processed_filepath = filepath + "processed/" + filename[:-4]
+    np.save(processed_filepath, np.array(all_bins))
+    return processed_filepath
 
 if __name__ == "__main__":
     test_song = "new4DemoV5.mp3"
