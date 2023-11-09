@@ -37,6 +37,20 @@ class Database:
         records = cur.fetchall()
         cur.close()
         return len(records) > 0
+    
+    def get_artist_by_song_name(self, songname):
+        cur = self.dbh.cursor()
+        cur.execute(f"SELECT * from all_songs WHERE song_name='{songname}'")
+        records = cur.fetchall()
+        cur.close()
+        return records[0][2]
+    
+    def get_file_by_song_name(self, songname):
+        cur = self.dbh.cursor()
+        cur.execute(f"SELECT * from all_songs WHERE song_name='{songname}'")
+        records = cur.fetchall()
+        cur.close()
+        return records[0][3]
 
     def remove_song(self, songname):
         cur = self.dbh.cursor()
@@ -60,5 +74,13 @@ class Database:
 
 if __name__ == "__main__":
     db = Database()
-    # db.add_song({"main_genre": "hip-hop", "artist": "Kendrick Lamar", "orig_file": "test", "proc_file_0": "test", "src_url": "test"})
-    db.remove_song("5752")
+    db.remove_song("Common Ground")
+    # remove all songs where the reference file doesn't exist
+    # cur = db.dbh.cursor()
+    # cur.execute("SELECT * FROM all_songs")
+    # records = cur.fetchall()
+    # cur.close()
+
+    # for record in records:
+    #     if not os.path.exists(record[3]):
+    #         db.remove_song(record[5])

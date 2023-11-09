@@ -1,6 +1,5 @@
 import wikipedia
 from bs4 import BeautifulSoup
-from seleniumbase import Driver
 import requests
 import yt_dlp
 import database
@@ -73,6 +72,24 @@ def sanitize_songname(song):
     song = song.replace('<', '')
     song = song.replace("'", "")
     return song
+
+def temp_scrape_song(yt_url, sess_prefix):
+    download_options = {'format' : 'bestaudio', 'noplaylist':'True',  'quiet' : 'True',
+                        'outtmpl': sess_prefix+'temp.%(ext)s', 'postprocessors': [{
+                        'key': 'FFmpegExtractAudio',
+                        'preferredcodec': 'mp3',
+                        'preferredquality': '192',
+                    }]}
+    
+    with yt_dlp.YoutubeDL(download_options) as ydl:
+        try:
+            requests.get(yt_url)
+        except:
+            video = ydl.extract_info(yt_url)['entries'][0]
+        else:
+            video = ydl.extract_info(yt_url)
+
+    return sess_prefix+"temp.mp3"
     
 def get_all_artist_songs(artist, genre, db):
     print(f"Getting albums for {artist}")
