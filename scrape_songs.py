@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 import yt_dlp
 import database
-from preprocess import preprocess
+from preprocess import preprocess_0
 
 hip_hop_artists = ["Kendrick Lamar", "J. Cole", "Drake", "Kanye West", "Chance the Rapper", "Childish Gambino", "Jay-Z", "Eminem", "Lil Wayne", "Travis Scott", "Nicki Minaj", "Future", "Post Malone", "Cardi B", "Migos", "Lil Uzi Vert", "Lil Yachty", "21 Savage", "Kodak Black", "Young Thug", "Gucci Mane", "Meek Mill", "A$AP Rocky", "A$AP Ferg", "Lil Baby", "DaBaby", "Lil Durk", "Pooh Shiesty", "Moneybagg Yo", "42 Dugg", "Key Glock", "YoungBoy Never Broke Again", "Young Dolph", "YNW Melly", "Polo G", "Kodak Black", "9lokkNine"]
 edm_artists = ["Martin Garrix", "The Chainsmokers", "Marshmello", "Calvin Harris", "David Guetta", "Avicii", "Tiësto", "Zedd", "Steve Aoki", "Diplo", "Skrillex", "Kygo", "Afrojack", "Hardwell", "Axwell Λ Ingrosso", "DJ Snake", "Alan Walker", "Don Diablo", "R3hab", "KSHMR", "Alesso", "Armin van Buuren", "Galantis", "Dimitri Vegas & Like Mike", "Nicky Romero", "Sebastian Ingrosso", "Alok", "Swedish House Mafia", "Oliver Heldens", "W&W", "Above & Beyond", "Nervo", "Fedde Le Grand", "Vintage Culture", "Lost Frequencies", "Quintino", "Vicetone", "Carl Cox", "Eric Prydz", "Bassjackers", "Dillon Francis", "Headhunterz", "VINAI", "Blasterjaxx", "Yellow Claw", "Shapov", "Steve Angello", "Deadmau5", "Tchami", "Borgeous", "Quintino", "DVBBS", "Krewella", "Kura", "Tom Swoon", "Firebeatz", "Paul van Dyk", "Danny Avila", "Wolfpack", "Andrew Rayel", "Flume", "Aly & Fila", "Ummet Ozcan", "Ferry Corsten", "Axwell", "Daft Punk", "Showtek", "Bob Sinclar", "Major Lazer", "Blasterjaxx", "NERVO", "Above & Beyond", "Steve Angello", "Fedde Le Grand", "Alok", "Don Diablo", "Swedish House Mafia", "Dimitri Vegas & Like Mike", "Afrojack", "Steve Aoki", "R3hab", "KSHMR", "W&W", "Calvin Harris", "Axwell Λ Ingrosso", "Nicky Romero", "Oliver Heldens", "DVBBS", "Quintino", "Alesso", "Galantis", "DJ Snake", "Ummet Ozcan", "Zedd", "Deadmau5", "Above & Beyond", "Sebastian Ingrosso", "NERVO"]
@@ -111,7 +111,7 @@ def get_all_artist_songs(artist, genre, db):
             print(f"Downloading {song}")
             try:
                 save_dir, filename = download_song(song, genre, artist)
-                preprocessed_filename = preprocess(save_dir, filename)
+                preprocessed_filename = preprocess_0(save_dir, filename)
                 db.add_song({"main_genre": genre, "artist": artist, "orig_file": save_dir + filename, "proc_file_0": preprocessed_filename, "src_url": wikipedia.page(artist + " discography").url, "song_name": song})
                 print(f"Added {song} to database\n")
             except Exception as e:

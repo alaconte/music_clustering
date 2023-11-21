@@ -52,6 +52,12 @@ class Database:
         cur.close()
         return records[0][3]
 
+    def add_preprocessed_file(self, songname, filepath):
+        cur = self.dbh.cursor()
+        cur.execute(f"UPDATE all_songs SET proc_file_1='{filepath}' WHERE song_name='{songname}'")
+        self.dbh.commit()
+        cur.close()
+
     def remove_song(self, songname):
         cur = self.dbh.cursor()
         cur.execute(f"SELECT * from all_songs WHERE song_name='{songname}'")

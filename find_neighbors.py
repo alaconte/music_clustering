@@ -18,7 +18,7 @@ def find_neighbors(test_song):
         # get all features
         features = []
         for record in records:
-            features.append(np.load(record[4]+".npy").flatten())
+            features.append(np.load(record[6]+".npy").flatten())
         features = np.array(features)
 
         # normalize features
@@ -42,7 +42,7 @@ def find_neighbors(test_song):
     nbrs = NearestNeighbors(n_neighbors=10, algorithm='ball_tree').fit(features)
 
     # get neighbor for test song
-    test_features = preprocess.preprocess_in_mem("", test_song).flatten()
+    test_features = preprocess.preprocess_in_mem("", test_song, preprocess.rfft_and_bins_diff).flatten()
     distances, indices = nbrs.kneighbors([test_features])
 
     # print results
